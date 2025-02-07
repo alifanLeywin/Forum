@@ -36,11 +36,8 @@
             </div>
             <!-- BUAT CREATE POST -->
             <div class="header__offset-btn">
-                <a href="#"><img src="{{ asset('fonts/icons/main/New_Topic.svg') }}" alt="New Topic"></a>
+                <a href="{{route('create')}}"><img src="{{ asset('fonts/icons/main/New_Topic.svg') }}" alt="New Topic"></a>
             </div>
         </div>
-
-        <!-- Offset Button -->
-        
     </div>
 </header>

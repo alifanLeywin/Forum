@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive HTML5 Template</title>
+    <title>Forum User</title>
     <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,800" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('fonts/icons/main/mainfont/style.css') }}">
     <link rel="stylesheet" href="{{ asset('fonts/icons/font-awesome/css/font-awesome.min.css') }}">
