@@ -13,8 +13,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $data = Post::all();
-
+        // $data = Post::all();
+        $data = Post::with('user')->get();
         return view('dashboard', compact('data'));
     }
 

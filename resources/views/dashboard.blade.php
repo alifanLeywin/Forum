@@ -42,7 +42,7 @@
                                                 <div class="dropdown__user-nav">
                                                 </div>
                                                 <div class="dropdown__user-info">
-                                                    <a href="#">{{ Auth::user()->name }}</a>
+                                                    <a href="#">{{$item->user->name}}</a>
                                                     <p>Last post 4 hours ago. Joined Jun 1, 16</p>
                                                 </div>
                                                 <div class="dropdown__user-icons">
@@ -60,7 +60,7 @@
                                 </div>
                                 <div class="posts__replies">100k</div>
                                 <div class="posts__views">800m</div>
-                                <div class="posts__activity">11d</div>
+                                <div class="posts__activity">{{ $item->created_at->diffForHumans() }}</div>
                             </div>
                         </div>
                     @endforeach
