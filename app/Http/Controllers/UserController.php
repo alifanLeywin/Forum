@@ -71,7 +71,7 @@ class UserController extends Controller
     public function edit(string $id)
     {
         $post = Post::findOrFail($id);
-        return view('posts.edit', compact('post'));
+        return view('edit', compact('post')); // Mengarah ke view 'edit' langsung di dalam views
     }
 
     /**
@@ -90,7 +90,7 @@ class UserController extends Controller
             'content' => $request->input('content'),
         ]);
     
-        return redirect()->route('posts.index')->with('success', 'Post berhasil diperbarui');    
+        return redirect()->route('dashboard')->with('success', 'Post berhasil diperbarui');    
     }
 
     /**

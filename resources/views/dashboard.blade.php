@@ -11,11 +11,6 @@
             <!-- Header hanya ditampilkan sekali -->
             <div class="posts__head">
                 <div class="posts__topic">Topik</div>
-                <div class="posts__category"></div>
-                <div class="posts__users">Pengguna</div>
-                <div class="posts__replies">Edit</div>
-                <div class="posts__views">Hapus</div>
-                <div class="posts__activity">Dibuat</div>
             </div>
 
             <!-- Body berisi daftar postingan -->
@@ -58,12 +53,15 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="posts__replies">100k</div>
-                                <form action="{{ route('posts.destroy', $item->id) }}" method="POST" style="display: inline-block;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus postingan ini?')">Hapus</button>
-                                </form>
+                                    
+                                    <!-- Tombol Hapus -->      <!-- Tombol Edit -->
+                                    <form action="{{ route('posts.destroy', $item->id) }}" method="POST" style="display: inline-block;" class="edpus">
+                                        <a href="{{ route('posts.edit', $item->id) }}" class="btn btn-warning">Edit</a>
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus postingan ini?')">Hapus</button>
+                                    </form>
+
                                 <div class="posts__activity">{{ $item->created_at->diffForHumans() }}</div>
                             </div>
                         </div>
@@ -73,7 +71,7 @@
                     <div class="pagination-container">
                         {{$data->links('pagination::bootstrap-5')}}
                     </div>
-            </div>
+            </div><
         </div>
     </div>
 </main>
@@ -150,4 +148,13 @@
     color: #fff;
 }
 
+.posts__activity {
+    margin-left: 3px; /* Memberikan jarak antara activity dan elemen sebelumnya */
+    margin-right: 3rem; /* Memberikan jarak antara activity dan elemen sebelumnya */
+}
+
+.edpus {
+    margin: auto;
+    padding-right: 1rem;
+}
 </style>

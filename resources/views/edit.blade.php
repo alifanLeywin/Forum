@@ -24,7 +24,7 @@
                 </div>
                 <!-- Tombol Batal dan Kirim -->
                 <div class="create__footer">
-                    <a href="{{ route('posts.index') }}" class="create__btn-cansel btn">Batal</a>
+                    <a href="{{ route('dashboard') }}" class="create__btn-cansel btn">Batal</a>
                     <button type="submit" class="create__btn-create btn btn--type-02">Kirim</button>
                 </div>
             </div>

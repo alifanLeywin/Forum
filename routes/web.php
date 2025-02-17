@@ -45,7 +45,8 @@ Route::middleware('auth')->group(function () {
 // buat hapus
 Route::delete('/posts/{post}', [UserController::class, 'destroy'])->name('posts.destroy');
 
-
+Route::get('/posts/{post}/edit', [UserController::class, 'edit'])->name('posts.edit');
+Route::put('/posts/{post}', [UserController::class, 'update'])->name('posts.update');
 
 
 Route::get('/create', function () {
