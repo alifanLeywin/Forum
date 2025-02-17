@@ -15,6 +15,11 @@ class UserController extends Controller
     {
         // $data = Post::all();
         $data = Post::with('user')->paginate(5);
+
+        foreach ($data as $item) {
+            $item->user->posts_count = $item->user->posts()->count();   // Menghitung jumlah total post yang dibuat
+        }
+
         return view('dashboard', compact('data'));
     }
 
@@ -33,7 +38,7 @@ class UserController extends Controller
     {
         $request->validate([
             'title' => 'required|min:3|max:25',
-            'content' => 'required|min:10|max:255'
+            'content' => 'required|min:10'
         ],[
             'title.required' => 'Judul Wajib Diisi',
             'content.required' => 'Konten Wajib Diisi',
@@ -65,7 +70,8 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $post = Post::findOrFail($id);
+        return view('posts.edit', compact('post'));
     }
 
     /**
@@ -73,7 +79,18 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+        ]);
+    
+        $post = Post::findOrFail($id);
+        $post->update([
+            'title' => $request->input('title'),
+            'content' => $request->input('content'),
+        ]);
+    
+        return redirect()->route('posts.index')->with('success', 'Post berhasil diperbarui');    
     }
 
     /**
@@ -81,6 +98,10 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+
+        $post = Post::findOrFail($id);
+        $post->delete();
+
+        return redirect()->route('dashboard')->with('success', 'Postingan berhasil dihapus');
     }
 }
