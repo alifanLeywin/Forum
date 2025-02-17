@@ -3,7 +3,7 @@
       <div class="container">
         <!-- Logo -->
         <div class="footer__logo">
-          <img src="fonts/icons/main/Logo_Forum.svg" alt="Unity logo"> Unity
+          <img src="{{ asset('images/favicon.ico') }}" alt="Unity logo"> Farlifan
         </div>
   
         <!-- Navigation -->
