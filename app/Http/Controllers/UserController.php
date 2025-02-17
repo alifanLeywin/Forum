@@ -13,7 +13,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $data = Post::paginate(5);
+        // $data = Post::all();
+        $data = Post::with('user')->paginate(5);
         return view('dashboard', compact('data'));
     }
 
@@ -32,7 +33,7 @@ class UserController extends Controller
     {
         $request->validate([
             'title' => 'required|min:3|max:25',
-            'content' => 'required|min:10'
+            'content' => 'required|min:10|max:255'
         ],[
             'title.required' => 'Judul Wajib Diisi',
             'content.required' => 'Konten Wajib Diisi',
