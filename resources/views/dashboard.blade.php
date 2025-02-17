@@ -1,93 +1,98 @@
 @extends('layout.app')
-
 @section('content')
+
 <main>
     <div class="container">
         <div class="nav">
             <!-- Navigasi bisa ditambahkan di sini -->
         </div>
-
         <div class="posts">
             <!-- Header hanya ditampilkan sekali -->
             <div class="posts__head">
                 <div class="posts__topic">Topik</div>
             </div>
-
             <!-- Body berisi daftar postingan -->
             <div class="posts__body">
-                    @foreach ($data as $item)
-                        <div class="posts__item">
-                            <div class="posts__section-left">
-                                <div class="posts__topic">
-                                    <div class="posts__content">
-                                        <a href="#">
-                                            <h3>{{ $item->title }}</h3> <!-- Judul postingan -->
-                                        </a>
-                                        <p>{{ $item->content }}</p> <!-- Konten postingan -->
-                                    </div>
+                @foreach ($data as $item)
+                    @php
+                        $isAdmin = $item->user->usertype === 'admin'; // Cek apakah user adalah admin
+                    @endphp
+                    <div class="posts__item {{ $isAdmin ? 'admin-post' : '' }}">
+                        <div class="posts__section-left">
+                            <div class="posts__topic">
+                                <div class="posts__content">
+                                    <a href="#">
+                                        <h3>{{ $item->title }}</h3> <!-- Judul postingan -->
+                                    </a>
+                                    <p>{{ $item->content }}</p> <!-- Konten postingan -->
                                 </div>
                             </div>
-                            <div class="posts__section-right">
-                                <div class="posts__users js-dropdown">
-                                    <div>
-                                        <a href="#" class="avatar"><img src="fonts/icons/avatars/B.svg" alt="avatar" data-dropdown-btn="user-b"></a>
-                                        <div class="posts__users-dropdown dropdown dropdown--user dropdown--reverse-y" data-dropdown-list="user-b">
-                                            <div class="dropdown__user">
-                                                <a href="#" class="dropdown__user-label bg-218380">B</a>
-                                                <div class="dropdown__user-nav">
-                                                </div>
-                                                <div class="dropdown__user-info">
-                                                    <a href="#">{{$item->user->name}}</a>
-                                                    <p>Joined {{ \Carbon\Carbon::parse($item->user->created_at)->diffForHumans() }}</p>
-                                                </div>
-                                                <div class="dropdown__user-icons">
-                                                    <a href="#"><img src="fonts/icons/badges/Intermediate.svg" alt="user-icon"></a>
-                                                    <a href="#"><img src="fonts/icons/badges/Bot.svg" alt="user-icon"></a>
-                                                    <a href="#"><img src="fonts/icons/badges/Animal_Lover.svg" alt="user-icon"></a>
-                                                </div>
-                                                <div class="dropdown__user-statistic">
-                                                    <div>Threads - <span>1184</span></div>
-                                                    <div>Posts - <span>{{ $item->user->posts_count }}</span></div>
-                                                </div>
+                        </div>
+                        <div class="posts__section-right">
+                            <div class="posts__users js-dropdown">
+                                <div>
+                                    <a href="#" class="avatar"><img src="{{ asset('images/orang.png') }}" alt="avatar" data-dropdown-btn="user-b"></a>
+                                    <div class="posts__users-dropdown dropdown dropdown--user dropdown--reverse-y" data-dropdown-list="user-b">
+                                        <div class="dropdown__user">
+                                            <a href="#" class="dropdown__user-label bg-218380">B</a>
+                                            <div class="dropdown__user-info">
+                                                <a href="#">{{ $item->user->name }}</a>
+                                                <p>Joined {{ \Carbon\Carbon::parse($item->user->created_at)->diffForHumans() }}</p>
+                                            </div>
+                                            <div class="dropdown__user-icons">
+                                                <a href="#"><img src="fonts/icons/badges/Intermediate.svg" alt="user-icon"></a>
+                                                <a href="#"><img src="fonts/icons/badges/Bot.svg" alt="user-icon"></a>
+                                                <a href="#"><img src="fonts/icons/badges/Animal_Lover.svg" alt="user-icon"></a>
+                                            </div>
+                                            <div class="dropdown__user-statistic">
+                                                <div>Threads - <span>1184</span></div>
+                                                <div>Posts - <span>{{ $item->user->posts_count }}</span></div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                    
-                                    <!-- Tombol Hapus -->      <!-- Tombol Edit -->
-                                    <form action="{{ route('posts.destroy', $item->id) }}" method="POST" style="display: inline-block;" class="edpus">
-                                        <a href="{{ route('posts.edit', $item->id) }}" class="btn btn-warning">Edit</a>
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus postingan ini?')">Hapus</button>
-                                    </form>
-
-                                <div class="posts__activity">{{ $item->created_at->diffForHumans() }}</div>
                             </div>
-                        </div>
-                    @endforeach
 
-                    {{-- PAGINATION --}}    
-                    <div class="pagination-container">
-                        {{$data->links('pagination::bootstrap-5')}}
+                            <!-- Tombol Edit dan Hapus -->
+                            <form action="{{ route('posts.destroy', $item->id) }}" method="POST" style="display: inline-block;" class="edpus">
+                                <a href="{{ route('posts.edit', $item->id) }}" class="btn btn-warning">Edit</a>
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus postingan ini?')">Hapus</button>
+                            </form>
+
+                            <div class="posts__activity">Dibuat: {{ $item->created_at->diffForHumans() }}</div>
+                        </div>
                     </div>
-            </div><
+                @endforeach
+                {{-- PAGINATION --}}
+                <div class="pagination-container">
+                    {{ $data->links('pagination::bootstrap-5') }}
+                </div>
+            </div>
         </div>
     </div>
 </main>
+
 @endsection
 
 <style>
-    /* Menambah style untuk posts__item */
+/* Warna default untuk postingan */
 .posts__item {
     background-color: #ffffff;
-    border-radius: 8px; /* Membuat sudut lebih lembut */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Menambahkan bayangan agar lebih modern */
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
     padding: 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+/* Warna khusus untuk postingan admin */
+.posts__item.admin-post {
+    background-color: #ebe6e6; /* Warna merah muda muda */
+    border-left: 5px solid #dc3545; /* Tambahkan border merah di kiri */
 }
 
 /* Memperhalus tampilan konten */
@@ -124,6 +129,7 @@
     text-align: center;
     margin-top: 30px;
 }
+
 .pagination-container .pagination {
     display: inline-flex;
     list-style: none;
@@ -149,8 +155,8 @@
 }
 
 .posts__activity {
-    margin-left: 3px; /* Memberikan jarak antara activity dan elemen sebelumnya */
-    margin-right: 3rem; /* Memberikan jarak antara activity dan elemen sebelumnya */
+    margin-left: 3px;
+    margin-right: 3rem;
 }
 
 .edpus {

@@ -49,7 +49,7 @@
           <!-- Bottom Line -->
           <div class="footer__bline">
             <ul class="footer__menu">
-              <li class="footer__copyright">&copy; 2017 azyrusthemes.com</li>
+              <li class="footer__copyright">&copy; 2025 Forumkitabersama.com</li>
               <li><a href="#">Teams</a></li>
               <li><a href="#">Privacy</a></li>
               <li><a href="#">Send Feedback</a></li>
