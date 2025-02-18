@@ -40,13 +40,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/create-post', [UserController::class, 'store'])->name('create.post');
     Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
     Route::post('/create-post', [UserController::class, 'store'])->name('create.post');
+    // buat hapus
+    Route::delete('/posts/{post}', [UserController::class, 'destroy'])->name('posts.destroy');
+    
+    Route::get('/posts/{post}/edit', [UserController::class, 'edit'])->name('posts.edit');
+    Route::put('/posts/{post}', [UserController::class, 'update'])->name('posts.update');
 });
 
-// buat hapus
-Route::delete('/posts/{post}', [UserController::class, 'destroy'])->name('posts.destroy');
-
-Route::get('/posts/{post}/edit', [UserController::class, 'edit'])->name('posts.edit');
-Route::put('/posts/{post}', [UserController::class, 'update'])->name('posts.update');
 
 
 Route::get('/create', function () {

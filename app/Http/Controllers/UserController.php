@@ -98,10 +98,29 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-
         $post = Post::findOrFail($id);
-        $post->delete();
+        $currentUser = Auth::User();
 
-        return redirect()->route('dashboard')->with('success', 'Postingan berhasil dihapus');
+        // Cek apakah user yang login adalah pemilik postingan
+        $isPostOwner = $currentUser->id === $post->user_id;
+
+        // Cek apakah postingan ini dibuat oleh admin
+        $postByAdmin = $post->user->usertype === 'admin';
+
+        // Cek apakah user yang login adalah admin
+        $isAdmin = $currentUser->usertype === 'admin';
+
+        // Hanya admin yang boleh mengedit postingan admin
+        if ($postByAdmin && !$isAdmin) {
+            return redirect()->back()->with('error', 'Anda tidak dapat mengedit postingan admin.');
+        }
+
+        // Hanya admin atau pemilik postingan yang bisa mengedit
+        if (!$isAdmin && !$isPostOwner) {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengedit postingan ini.');
+        }
+
+        $post->delete();
+        return redirect()->route('dashboard')->with('success', 'Post berhasil dihapus!');
     }
 }

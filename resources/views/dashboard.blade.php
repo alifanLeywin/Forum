@@ -7,24 +7,21 @@
             <!-- Navigasi bisa ditambahkan di sini -->
         </div>
         <div class="posts">
-            <!-- Header hanya ditampilkan sekali -->
             <div class="posts__head">
                 <div class="posts__topic">Topik</div>
             </div>
-            <!-- Body berisi daftar postingan -->
             <div class="posts__body">
                 @foreach ($data as $item)
                     @php
-                        $isAdmin = $item->user->usertype === 'admin'; // Cek apakah user adalah admin
+                        $isAdmin = auth()->user() && auth()->user()->usertype === 'admin'; // Cek apakah user login adalah admin
+                        $postAdmin = $item->user->usertype === 'admin'; // Cek apakah pembuat postingan adalah admin
                     @endphp
-                    <div class="posts__item {{ $isAdmin ? 'admin-post' : '' }}">
+                    <div class="posts__item {{ $postAdmin ? 'admin-post' : '' }}">
                         <div class="posts__section-left">
                             <div class="posts__topic">
                                 <div class="posts__content">
-                                    <a href="#">
-                                        <h3>{{ $item->title }}</h3> <!-- Judul postingan -->
-                                    </a>
-                                    <p>{{ $item->content }}</p> <!-- Konten postingan -->
+                                    <h3>{{ $item->title }}</h3>
+                                    <p>{{ $item->content }}</p>
                                 </div>
                             </div>
                         </div>
@@ -53,19 +50,33 @@
                                 </div>
                             </div>
 
-                            <!-- Tombol Edit dan Hapus -->
-                            <form action="{{ route('posts.destroy', $item->id) }}" method="POST" style="display: inline-block;" class="edpus">
-                                <a href="{{ route('posts.edit', $item->id) }}" class="btn btn-warning">Edit</a>
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus postingan ini?')">Hapus</button>
-                            </form>
+                                <!-- Tombol Edit dan Hapus -->
+                                <form action="{{ route('posts.destroy', $item->id) }}" method="POST" style="display: inline-block;" class="edpus">
+                                    @php
+                                        $currentUser = auth()->user();
+                                        $isPostOwner = $currentUser && $currentUser->id === $item->user_id; // Apakah user yang login adalah pemilik postingan?
+                                        $isAdmin = $currentUser && $currentUser->usertype === 'admin'; // Apakah user yang login admin?
+                                        $postByAdmin = $item->user->usertype === 'admin'; // Apakah postingan dibuat oleh admin?
+                                    @endphp
 
+                                    <!-- Hanya admin atau pemilik postingan (bukan postingan admin) yang bisa mengedit -->
+                                    @if($isAdmin || ($isPostOwner && !$postByAdmin))
+                                        <a href="{{ route('posts.edit', $item->id) }}" class="btn btn-warning">Edit</a>
+                                    @endif
+
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <!-- Hanya admin atau pemilik postingan (bukan postingan admin) yang bisa menghapus -->
+                                    @if($isAdmin || ($isPostOwner && !$postByAdmin))
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus postingan ini?')">Hapus</button>
+                                    @endif
+                                </form>
                             <div class="posts__activity">Dibuat: {{ $item->created_at->diffForHumans() }}</div>
                         </div>
                     </div>
                 @endforeach
-                {{-- PAGINATION --}}
+
                 <div class="pagination-container">
                     {{ $data->links('pagination::bootstrap-5') }}
                 </div>
@@ -75,6 +86,7 @@
 </main>
 
 @endsection
+
 
 <style>
 /* Warna default untuk postingan */
